@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plug Wallet NFT Viewer</title>
+</head>
+<body>
+  <h1>Plug Wallet NFT Viewer</h1>
+  <ul id="nfts"></ul>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.12.0/p5.min.js"></script>
+  <script>
+    // Create a new Plug wallet instance
+    const wallet = new Plug({
+      provider: new Web3Provider("wss://plug.ic0.app:8545"),
+      networkId: 1,
+    });
+
+    // Connect the wallet to the page
+    wallet.connect();
+
+    // Get the list of NFTs in the wallet
+    async function getNFTs() {
+      const nfts = await wallet.getNFTs();
+      console.log(nfts);
+    }
+
+    // Display the list of NFTs on the page
+    getNFTs().then(nfts => {
+      nfts.forEach(nft => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <img src="${nft.imageUrl}" alt="${nft.name}">
+          <h3>${nft.name}</h3>
+          <p>${nft.description}</p>
+        `;
+        $("#nfts").append(li);
+      });
+    });
+  </script>
+</body>
+</html>
